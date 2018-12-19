@@ -46,7 +46,7 @@ provider:
     BASIQ_API_URL: https://au-api.basiq.io
     BASIQ_USER_TOKEN: OTM4YjAxOWEtZDBkYS00MzI4LWJjYzEtYWZmYTg0ZmFiM2NjOmQ3MzVjOTcwLTc0MjctNGMzNS1iOTg0LWUxMGMxMWRiY2MzNw==
     COUNTRY: AU
-    INSTITUTION_ID: AU0000
+    INSTITUTION_ID: AU00000
 
 # you can add packaging information here
 #package:
