@@ -14,6 +14,8 @@ pipelines:
         # keyword git says about type of material and url at once
         git: https://github.com/nikhilmahto/basiq-enrich-lambda-api.git
         branch: master
+    environment_variables:
+      PATH: /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/npm:/usr/local/bin/node
     stages: # list of stages in order
       - unit-testing-stage: # name of stage
           clean_workspace: true
