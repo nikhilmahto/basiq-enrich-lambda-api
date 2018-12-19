@@ -1,0 +1,26 @@
+environments:
+  basiq_enrich_non_prod_environments:
+    environment_variables:
+      ENVIRONMENT: non_prod
+    pipelines:
+      - basiq_enrich_nonprod_pipeline
+pipelines:
+  basiq_enrich_nonprod_pipeline: # definition of basiq_enrich_pipeline
+    group: basiq_enrich_nonprod
+    label_template: "${mygit[:8]}"
+    locking: off
+    materials:
+      mygit: # this is the name of material
+        # keyword git says about type of material and url at once
+        git: https://github.com/nikhilmahto/basiq-enrich-lambda-api.git
+        branch: master
+    stages: # list of stages in order
+      - unit-testing-stage: # name of stage
+          clean_workspace: true
+          jobs:
+            unit-testing-job: # name of the job
+              tasks: # ordered list of tasks to execute in job unit-testing-job
+               - exec: # indicates type of task
+                   command: npm
+                   arguments:
+                    - "install"
