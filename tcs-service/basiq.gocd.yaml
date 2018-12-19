@@ -25,8 +25,7 @@ pipelines:
               tasks: # ordered list of tasks to execute in job unit-testing-job
                - script: | # indicates type of task
                   cd ./tcs-service/
-                  pwd
                   npm install mocha nock chai --save-dev
-                  npm install request request-promise
-                  cd ..
-                  pwd
+                  npm install request-promise dotenv
+                  cd ./test/
+                  npm test
