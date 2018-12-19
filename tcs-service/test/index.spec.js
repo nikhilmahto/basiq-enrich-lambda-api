@@ -21,7 +21,8 @@ describe('Basiq Enrich API Call - Get API Token', () => {
     reqheaders: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'basiq-version': '2.0',
-      'Authorization': 'Basic ' +  process.env.BASIQ_USER_TOKEN
+      'Authorization': 'Basic ' +  process.env.BASIQ_USER_TOKEN,
+      'x-correlationid': process.env.X_CORRELATIONID
       }
   })
   .post('/token')
@@ -29,7 +30,7 @@ describe('Basiq Enrich API Call - Get API Token', () => {
 });
  
  it('It should return basiq access token for API', () => {
-sourceFile.basiq.getToken()
+sourceFile.basiq.getToken(process.env.X_CORRELATIONID)
       .then(response1 => {
       //  console.log("3: ");
        expect(response1.token_type).to.equal(tokenType);
@@ -45,7 +46,8 @@ describe('Basiq Enrich API Call - Get Transaction Details', () => {
    nock('https://au-api.basiq.io',{
      reqheaders: {
        'Content-Type': 'application/json',
-       'Authorization': 'Bearer ' + jsonApiToken.access_token
+       'Authorization': 'Bearer ' + jsonApiToken.access_token,
+       'x-correlationid': process.env.X_CORRELATIONID
        }
    })
    .get('/enrich')
@@ -56,7 +58,7 @@ describe('Basiq Enrich API Call - Get Transaction Details', () => {
 
 
    it('It should return Enrich details for the transaction', () => {
-    sourceFile.enrich.getDetails(jsonApiToken,narration)
+    sourceFile.enrich.getDetails(jsonApiToken,narration,process.env.X_CORRELATIONID)
     .then(response2 => {
       var jsoncontent = JSON.parse(JSON.stringify(response2));
      expect(jsoncontent.body.merchant.businessName).to.equal(mybusinessName);

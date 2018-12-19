@@ -5,7 +5,7 @@ const rp = require('request-promise');
 // Below If condition to be triggered only when ENV Varibale isn't passed from Lambda function. So we fetch the env variables from properties file for testing purpose.
 if(process.env.BASIQ_USER_TOKEN == undefined && process.env.INSTITUTION_ID == undefined &&  process.env.COUNTRY == undefined && process.env.BASIQ_API_URL == undefined)
 {
-   require('dotenv').config({path: __dirname + '/../test/data/localenv.env'});
+  // require('dotenv').config({path: __dirname + '/../test/data/localenv.env'});
 }
 
 const apitoken = process.env.BASIQ_USER_TOKEN;

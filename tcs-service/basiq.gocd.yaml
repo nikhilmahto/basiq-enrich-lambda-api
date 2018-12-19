@@ -29,3 +29,12 @@ pipelines:
                   npm install request-promise dotenv
                   cd ./test/
                   npm test
+      - deploy-lambda-sls-stage: # name of stage
+          clean_workspace: true
+          jobs:
+            deploy-lambda-sls-job: # name of the job
+              tasks: # ordered list of tasks to execute in job unit-testing-job
+               - script: | # indicates type of task
+                  cd ./tcs-service/
+                  npm install -g serverless
+                  sls deploy
