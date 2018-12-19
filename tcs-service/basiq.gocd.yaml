@@ -27,5 +27,6 @@ pipelines:
                   cd ./tcs-service/
                   pwd
                   npm install mocha nock chai --save-dev
+                  npm install request request-promise
                   cd ..
                   pwd
