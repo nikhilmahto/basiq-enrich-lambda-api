@@ -36,5 +36,6 @@ pipelines:
               tasks: # ordered list of tasks to execute in job unit-testing-job
                - script: | # indicates type of task
                   cd ./tcs-service/
+                  npm install request-promise
                   npm install -g serverless
                   sls deploy
