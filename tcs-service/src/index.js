@@ -1,16 +1,17 @@
 
 const rp = require('request-promise');
 
-//Only needed when Lambda is running locally or NOCK testing is being done
-//require('dotenv').config({path: __dirname + '/../test/data/localenv.env'});
-// PLEASE COMMENT THE ABOVE LINE IF RUNNING the command from console
+
+// Below If condition to be triggered only when ENV Varibale isn't passed from Lambda function. So we fetch the env variables from properties file for testing purpose.
+if(process.env.BASIQ_USER_TOKEN == undefined && process.env.INSTITUTION_ID == undefined &&  process.env.COUNTRY == undefined && process.env.BASIQ_API_URL == undefined)
+{
+   require('dotenv').config({path: __dirname + '/../test/data/localenv.env'});
+}
 
 const apitoken = process.env.BASIQ_USER_TOKEN;
 const institutionId = process.env.INSTITUTION_ID;
 const country = process.env.COUNTRY;
 const basiqUrl = process.env.BASIQ_API_URL;
-
-
 
 var basiq = {
  getToken: function(xcorrelationid){
