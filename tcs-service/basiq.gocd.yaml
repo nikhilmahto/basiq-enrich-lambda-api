@@ -23,7 +23,7 @@ pipelines:
             unit-testing-job: # name of the job
               tasks: # ordered list of tasks to execute in job unit-testing-job
                - exec: # indicates type of task
-                   working_directory: /tcs-service/
+                   working_directory: ./tcs-service/
                    command: npm
                    arguments:
                     - "install mocha nock chai --save-dev"
