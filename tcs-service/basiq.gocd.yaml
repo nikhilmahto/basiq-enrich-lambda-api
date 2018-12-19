@@ -6,7 +6,7 @@ environments:
     pipelines:
       - basiq_enrich_nonprod_pipeline
     agents:
-      - Nikhils-MacBook-Pro.local
+      - 473392eb-d48b-4d24-9386-9c165ffa4861
 pipelines:
   basiq_enrich_nonprod_pipeline: # definition of basiq_enrich_pipeline
     group: basiq_enrich_nonprod
