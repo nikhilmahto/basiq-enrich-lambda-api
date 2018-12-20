@@ -3,9 +3,10 @@ const index = require('./index');
 exports.getTCS = async (event) => {
   if((event.headers !=null  && event.headers != undefined) && (event.headers['x-correlationid'] !=null  && event.headers['x-correlationid'] != undefined))
     {
-    if((event.body != null && event.body != undefined)  &&  (( event.body.transaction_narration != null && event.body.transaction_narration != undefined )))
+    if(event.body != null && event.body != undefined)  
     {
         let jsonEventBody=JSON.parse(event.body);
+     //   if(jsonEventBody.transaction_narration!= null && jsonEventBody.transaction_narration!= undefined)
         let result = await index.callBasiq(jsonEventBody.transaction_narration,event.headers['x-correlationid']);
     
 
