@@ -1,11 +1,11 @@
 'use strict';
 const index = require('./index');
 exports.getTCS = async (event) => {
-    if((event.headers !=null  && event.headers != undefined) && (event.headers['x-correlationid'] !=null  && event.headers['x-correlationid'] != undefined))
+  if((event.headers !=null  && event.headers != undefined) && (event.headers['x-correlationid'] !=null  && event.headers['x-correlationid'] != undefined))
     {
-    let jsonEventBody=JSON.parse(event.body);
-    if((jsonEventBody != null && jsonEventBody != undefined)  &&  (( jsonEventBody.transaction_narration != null && jsonEventBody.transaction_narration != undefined )))
+    if((event.body != null && event.body != undefined)  &&  (( event.body.transaction_narration != null && event.body.transaction_narration != undefined )))
     {
+        let jsonEventBody=JSON.parse(event.body);
         let result = await index.callBasiq(jsonEventBody.transaction_narration,event.headers['x-correlationid']);
     
 
