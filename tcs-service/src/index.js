@@ -24,8 +24,8 @@ var basiq = {
     'Authorization': 'Basic ' + apitoken,
     'x-correlationid': xcorrelationid
     },
-    json: true, // Automatically stringifies the body to JSON
-   resolveWithFullResponse: true
+    json: true // Automatically stringifies the body to JSON
+   //resolveWithFullResponse: true
    });
 }
 };
@@ -46,7 +46,7 @@ return rp({
 }
 };
 
-const callBasiq = async (narration,xcorrelationid,retries=1) =>
+const callBasiq = async (narration,xcorrelationid,retries=0) =>
 {
 try
 {
@@ -62,7 +62,7 @@ catch(err)
    console.log("Operation Failed: " + " --- " + err.statusCode + " --- " + jsonerrcontent.error.data[0].type + " --- " +  jsonerrcontent.error.data[0].code + " --- " + jsonerrcontent.error.data[0].title);
   
 }
- else if( /[5]\d\d/.test(err.statusCode) && retries < 4 )
+ else if( /[5]\d\d/.test(err.statusCode) && retries < 3 )
  {
     console.log("Basiq API Servers Connectivity Issue: Retry Attempt: " + retries + ". Error Code: " +  err.statusCode);
     const turnsLeft = retries + 1;
@@ -71,7 +71,7 @@ catch(err)
  else{
     console.log("Operation Failed: " + " --- " + err.statusCode + " --- " + jsonerrcontent.error.data[0].type + " --- " +  jsonerrcontent.error.data[0].code + " --- " + jsonerrcontent.error.data[0].title);
  }
-return err;
+return [err,retries];
 }
 }
 

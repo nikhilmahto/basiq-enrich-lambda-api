@@ -26,24 +26,23 @@ exports.getTCS = async (event) => {
     if(/[4]\d\d/.test(result.statusCode))
     {
         const response = {
-        "statusCode": result.statusCode,
-        "headers": result.options.headers,
+        "statusCode": result[0].statusCode,
+        "headers": result[0].options.headers,
         "body": JSON.stringify({
-            "response": result.error,
-            "attempts": 1,
-            "x-correlationid": result.options.headers['x-correlationid']
+            "response": result[0].error,
+            "x-correlationid": result[0].options.headers['x-correlationid']
         })  
     };
     return response;
    }
    else if(/[5]\d\d/.test(result.statusCode)){
     const response = {
-        "statusCode": result.statusCode,
-        "headers": result.options.headers,
+        "statusCode": result[0].statusCode,
+        "headers": result[0].options.headers,
         "body": JSON.stringify({
-            "response": result.error,
-            "attempts": 3,
-            "x-correlationid": result.options.headers['x-correlationid']
+            "response": result[0].error,
+            "attempts": result[1],
+            "x-correlationid": result[0].options.headers['x-correlationid']
         })
     };
     return response;

@@ -35,7 +35,6 @@ return sourceFile.basiq.getToken(process.env.X_CORRELATIONID)
        expect(res1.token_type).to.equal(tokenType);
        expect(res1.expires_in).to.be.equal(expireIn);
        expect(res1.access_token).to.equal(jsonApiToken.access_token);
-      
       });
   });
 
