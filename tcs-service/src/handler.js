@@ -18,7 +18,7 @@ exports.getTCS = async (event) => {
         "headers": result.headers,
         "body": JSON.stringify({
             "response": result.body,
-            "x-correlationid": result.headers['x-correlationid']
+            "x-correlationid": result.request.headers['x-correlationid']
         })    
     };
     return response;
