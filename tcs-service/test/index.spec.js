@@ -12,12 +12,14 @@ var apitoken = require('./data/token.json');
  var narration = "Garfish Manly NS";
  var mybusinessName = 'Garfish Manly';
  var mywebsite = 'http://garfish.com.au/garfish-manly/';
+ let nockscope;
 
 //console.log(process.env.BASIQ_USER_TOKEN);
 
-describe('Basiq Enrich API Call - Get API Token', () => {
- beforeEach( () => {
-  nock(process.env.BASIQ_API_URL,{
+describe('Unit Testing of TCS Lambda Service using Nock', () => {
+ 
+ it('It should return basiq access token for user\'s API token', () => {
+ nockscope = nock(process.env.BASIQ_API_URL,{
     reqheaders: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'basiq-version': '2.0',
@@ -27,45 +29,42 @@ describe('Basiq Enrich API Call - Get API Token', () => {
   })
   .post('/token')
   .reply(200, response1);
-});
- 
- it('It should return basiq access token for API', () => {
-sourceFile.basiq.getToken(process.env.X_CORRELATIONID)
-      .then(response1 => {
-      //  console.log("3: ");
-       expect(response1.token_type).to.equal(tokenType);
-       expect(response1.expires_in).to.be.equal(expireIn);
-       expect(response1.access_token).to.equal(jsonApiToken.access_token);
+
+return sourceFile.basiq.getToken(process.env.X_CORRELATIONID)
+      .then(res1 => {
+       expect(res1.token_type).to.equal(tokenType);
+       expect(res1.expires_in).to.be.equal(expireIn);
+       expect(res1.access_token).to.equal(jsonApiToken.access_token);
       
       });
   });
-});
-
-describe('Basiq Enrich API Call - Get Transaction Details', () => {
-  beforeEach( () => {
-   nock('https://au-api.basiq.io',{
-     reqheaders: {
-       'Content-Type': 'application/json',
-       'Authorization': 'Bearer ' + jsonApiToken.access_token,
-       'x-correlationid': process.env.X_CORRELATIONID
-       }
-   })
-   .get('/enrich')
-   .query({q: narration, country: process.env.COUNTRY, institution: process.env.INSTITUTION_ID})
-   .reply(200, response2);
-
- });
 
 
-   it('It should return Enrich details for the transaction', () => {
-    sourceFile.enrich.getDetails(jsonApiToken,narration,process.env.X_CORRELATIONID)
-    .then(response2 => {
-      var jsoncontent = JSON.parse(JSON.stringify(response2));
-     expect(jsoncontent.body.merchant.businessName).to.equal(mybusinessName);
-     expect(jsoncontent.body.merchant.website).to.equal(mywebsite);
+  it('It should return Enrich details for the transaction narration', () => {
+
+    nock('https://au-api.basiq.io',{
+      reqheaders: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + jsonApiToken.access_token,
+        'x-correlationid': process.env.X_CORRELATIONID
+        }
+    })
+    .get('/enrich')
+    .query({q: narration, country: process.env.COUNTRY, institution: process.env.INSTITUTION_ID})
+    .reply(200, response2);
+
+  return  sourceFile.enrich.getDetails(jsonApiToken,narration,process.env.X_CORRELATIONID)
+    .then(res2 => {
+      var jsoncontent = JSON.parse(JSON.stringify(res2));
+     expect(jsoncontent.body.response.merchant.businessName).to.equal(mybusinessName);
+     expect(jsoncontent.body.response.merchant.website).to.equal(mywebsite);
     });
  
 }); 
+
+afterEach(function() {
+  nock.cleanAll();
+});
 
 });
 

@@ -56,8 +56,7 @@ exports.getTCS = async (event) => {
        // "statusCode": 400,
        "headers": event.headers,
         "body": JSON.stringify({
-           "response": "Bad Request - Request Body can't be blank. Please enter the 'transaction_narration'.",
-           "x-correlationid": event.headers['x-correlationid']
+           "response": "Bad Request - Request Body can't be blank. Please enter the 'transaction_narration'."
         })   // body must be returned as a string
     };
     return response;

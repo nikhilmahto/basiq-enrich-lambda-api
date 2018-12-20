@@ -1,4 +1,5 @@
 module.exports = {
+"response": {
     "merchant": {
         "businessName": "Garfish Manly",
         "website": "http://garfish.com.au/garfish-manly/",
@@ -44,4 +45,5 @@ module.exports = {
         "merchant": "https://au-api.basiq.io/merchants/ae4a051c-4791-11e8-8750-0a87c0279fe8",
         "self": "https://au-api.basiq.io/enrich?q=garfish+MANLY+NS&institution=AU082991"
     }
+}
 }

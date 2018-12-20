@@ -24,8 +24,8 @@ var basiq = {
     'Authorization': 'Basic ' + apitoken,
     'x-correlationid': xcorrelationid
     },
-    json: true // Automatically stringifies the body to JSON
-   //resolveWithFullResponse: true
+    json: true, // Automatically stringifies the body to JSON
+   resolveWithFullResponse: true
    });
 }
 };
