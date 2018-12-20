@@ -1,12 +1,13 @@
 'use strict';
 const index = require('./index');
 exports.getTCS = async (event) => {
-  if((event.headers !=null  && event.headers != undefined) && (event.headers['x-correlationid'] !=null  && event.headers['x-correlationid'] != undefined))
+  if((event.headers !=null  && event.headers != undefined) && (event.headers['x-correlationid'] !=null  && event.headers['x-correlationid'] != undefined && event.headers['x-correlationid'] != "" ))
     {
     if(event.body != null && event.body != undefined)  
     {
-        let jsonEventBody=JSON.parse(event.body);
-     //   if(jsonEventBody.transaction_narration!= null && jsonEventBody.transaction_narration!= undefined)
+     let jsonEventBody=JSON.parse(event.body);
+     if(jsonEventBody.transaction_narration!= null && jsonEventBody.transaction_narration!= undefined && jsonEventBody.transaction_narration!= "")
+     {
         let result = await index.callBasiq(jsonEventBody.transaction_narration,event.headers['x-correlationid']);
     
 
@@ -48,8 +49,20 @@ exports.getTCS = async (event) => {
     };
     return response;
    }
-   }
+   
   } 
+    }
+    else{
+         const response = {
+       // "statusCode": 400,
+       "headers": event.headers,
+        "body": JSON.stringify({
+           "response": "Bad Request - Please enter the 'transaction_narration'."
+        })   // body must be returned as a string
+    };
+    return response;
+    }
+}
   else
    {
         const response = {
