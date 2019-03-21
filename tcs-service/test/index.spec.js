@@ -52,7 +52,7 @@ return sourceFile.basiq.getToken(process.env.X_CORRELATIONID)
     .query({q: narration, country: process.env.COUNTRY, institution: process.env.INSTITUTION_ID})
     .reply(200, response2);
 
-  return  sourceFile.enrich.getDetails(jsonApiToken,narration,process.env.X_CORRELATIONID)
+  return  sourceFile.enrich.getDetails(jsonApiToken,narration,process.env.INSTITUTION_ID,process.env.X_CORRELATIONID)
     .then(res2 => {
       var jsoncontent = JSON.parse(JSON.stringify(res2));
      expect(jsoncontent.body.response.merchant.businessName).to.equal(mybusinessName);
