@@ -36,7 +36,7 @@ return rp({
     headers: {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer ' + token.access_token,
-    'x-correlationid': headers.get['x-correlationid']
+    'x-correlationid': headers['x-correlationid']
     },
     json: true,
     resolveWithFullResponse: true
@@ -46,7 +46,6 @@ return rp({
 
 const callBasiq = async (narration,institutionId,headers,retries=0) =>
 {
- console.log("HH: " + headers);
 try
 {
 const btoken = await basiq.getToken(headers);

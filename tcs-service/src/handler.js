@@ -15,7 +15,7 @@ exports.getTCS = async (event) => {
      if((jsonEventBody.transaction_narration!= null && jsonEventBody.transaction_narration!= undefined && jsonEventBody.transaction_narration!= "")
      && (jsonEventBody.institutionId!= null && jsonEventBody.institutionId!= undefined && jsonEventBody.institutionId!= ""))
      {
-         
+        console.log("Event_Headers: " + event.headers);   
         let result = await index.callBasiq(jsonEventBody.transaction_narration,jsonEventBody.institutionId,event.headers);
     
 

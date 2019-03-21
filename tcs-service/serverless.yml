@@ -44,7 +44,7 @@ provider:
 # you can define service wide environment variables here
   environment:
     BASIQ_API_URL: https://au-api.basiq.io
-    BASIQ_USER_TOKEN: OTM4YjAxOWEtZDBkYS00MzI4LWJjYzEtYWZmYTg0ZmFiM2NjOmQ3MzVjOTcwLTc0MjctNGMzNS1iOTg0LWUxMGMxMWRiY2MzNw==
+    BASIQ_USER_TOKEN: OTgxYjNiZDYtZTk1ZC00YThiLThjZWItZWFiNTI4NzMxZjg3OjNmMmQ5ZDgxLTVhZmItNDM3ZC05ODJkLTQxMGMzMzQwZmU0Nw==
     COUNTRY: AU
 # you can add packaging information here
 #package:
