@@ -16,7 +16,7 @@ exports.getTCS = async (event) => {
      && (jsonEventBody.institutionId!= null && jsonEventBody.institutionId!= undefined && jsonEventBody.institutionId!= ""))
      {
         console.log("Event_Headers: " + event.headers);   
-        let result = await index.callBasiq(jsonEventBody.transaction_narration,jsonEventBody.institutionId,event.headers);
+        let result = await index.callBasiq(jsonEventBody.transaction_narration,jsonEventBody.institutionId,event.headers['x-correlationid']);
     
 
    if(/[2]\d\d/.test(result.statusCode))

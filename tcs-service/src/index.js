@@ -10,10 +10,10 @@ if(process.env.BASIQ_USER_TOKEN == undefined &&  process.env.COUNTRY == undefine
 const apitoken = process.env.BASIQ_USER_TOKEN;
 const country = process.env.COUNTRY;
 const basiqUrl = process.env.BASIQ_API_URL;
-console.log("Data Fetched from LAMBDA service environment variables: " + headers);
+console.log("Data Fetched from LAMBDA service environment variables: ");
 
 var basiq = {
- getToken: function(headers){
+ getToken: function(xcorrelationid){
  return rp({ 
    method: 'POST',
     uri: basiqUrl + '/token',
@@ -21,7 +21,7 @@ var basiq = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'basiq-version': '2.0',
     'Authorization': 'Basic ' + apitoken,
-    'x-correlationid': headers['x-correlationid']
+    'x-correlationid': xcorrelationid
     },
     json: true 
    });
@@ -29,14 +29,14 @@ var basiq = {
 };
 
 var enrich = {
- getDetails: function(token,narration,institutionId,headers){
+ getDetails: function(token,narration,institutionId,xcorrelationid){
 return rp({
    method: 'GET',
     uri: basiqUrl + '/enrich?q='+ narration +'&country='+ country +'&institution='+ institutionId,
     headers: {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer ' + token.access_token,
-    'x-correlationid': headers['x-correlationid']
+    'x-correlationid': xcorrelationid
     },
     json: true,
     resolveWithFullResponse: true
@@ -44,12 +44,12 @@ return rp({
 }
 };
 
-const callBasiq = async (narration,institutionId,headers,retries=0) =>
+const callBasiq = async (narration,institutionId,xcorrelationid,retries=0) =>
 {
 try
 {
-const btoken = await basiq.getToken(headers);
-const response = await enrich.getDetails(btoken,narration,institutionId,headers);
+const btoken = await basiq.getToken(xcorrelationid);
+const response = await enrich.getDetails(btoken,narration,institutionId,xcorrelationid);
 return response;
 }
 catch(err)
@@ -64,7 +64,7 @@ catch(err)
  {
     console.log("Basiq API Servers Connectivity Issue: Retry Attempt: " + retries + ". Error Code: " +  err.statusCode);
     const turnsLeft = retries + 1;
-    return callBasiq(narration,institutionId,headers,turnsLeft);
+    return callBasiq(narration,institutionId,xcorrelationid,turnsLeft);
  }
  else{
  //  console.log("CC:" + err);
