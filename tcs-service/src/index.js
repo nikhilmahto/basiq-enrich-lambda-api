@@ -10,7 +10,7 @@ if(process.env.BASIQ_USER_TOKEN == undefined &&  process.env.COUNTRY == undefine
 const apitoken = process.env.BASIQ_USER_TOKEN;
 const country = process.env.COUNTRY;
 const basiqUrl = process.env.BASIQ_API_URL;
-console.log("Data Fetched from LAMBDA service environment variables");
+console.log("Data Fetched from LAMBDA service environment variables: " + headers);
 
 var basiq = {
  getToken: function(headers){
