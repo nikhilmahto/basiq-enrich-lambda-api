@@ -50,6 +50,7 @@ try
 {
 const btoken = await basiq.getToken(xcorrelationid);
 const response = await enrich.getDetails(btoken,narration,institutionId,xcorrelationid);
+console.log("RR:" +  response) ;
 return response;
 }
 catch(err)
