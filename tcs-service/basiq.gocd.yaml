@@ -38,4 +38,4 @@ pipelines:
                   cd ./tcs-service/
                   npm install request-promise
                   npm install -g serverless
-                  sls deploy
+                  sls deploy --stage=ST
