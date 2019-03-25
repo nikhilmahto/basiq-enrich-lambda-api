@@ -1,109 +1,48 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
+service: 
+  name: ocd-basiq-tcs-service 
 
-service: basiq-enrich-tcs-lambda-api-v1 # NOTE: update this with your service name
-
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-# frameworkVersion: "=X.X.X"
+plugins:
+  - serverless-plugin-include-dependencies
+  - serverless-iam-roles-per-function
 
 provider:
   name: aws
   runtime: nodejs8.10
-
-# you can overwrite defaults here
-  stage: dev
+  apiName: ${self:service.name}-${self:provider.stage}
+  endpointType: private
+  stage: ${opt:stage}
   region: ap-southeast-2
+  logRetentionInDays: 14
   timeout: 08
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
-
-# you can define service wide environment variables here
-  environment:
-    BASIQ_API_URL: https://au-api.basiq.io
-    BASIQ_USER_TOKEN: OTgxYjNiZDYtZTk1ZC00YThiLThjZWItZWFiNTI4NzMxZjg3OjNmMmQ5ZDgxLTVhZmItNDM3ZC05ODJkLTQxMGMzMzQwZmU0Nw==
-    COUNTRY: AU
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
-#    - src/**
-#    - test/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
-
+  resourcePolicy:
+    - Effect: Allow
+      Principal: "*"
+  
 functions:
-  getTCS:
+  lambdaFunc:
     handler: src/handler.getTCS
+    description: Lambda function to get transaction categorisation via BASIQ
+    iamRoleStatementsName: ${self:service.name}-${self:provider.stage}-IAMRole
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+        - dynamodb:Scan
+        - dynamodb:Scan
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - logs:CreateLogStream
+        - logs:GetLogEvents
+        - logs:CreateLogGroup
+        - logs:PutLogEvents
+        Resource:
+        - arn:aws:dynamodb:${self:provider.region}:*:*
+        - arn:aws:logs:*:*:*
     events:
     - http:
-        path: tcs
+        path: /ocd-basiq-tcs
         method: POST
-#    The following are a few example events you can configure
-#    NOTE: Please make sure to change your handler code to work with those events
-#    Check the event documentation for details
-#    events:
-#      - http:
-#          path: users/create
-#          method: get
-#      - s3: ${env:BUCKET}
-#      - schedule: rate(10 minutes)
-#      - sns: greeter-topic
-#      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
-#      - alexaSkill: amzn1.ask.skill.xx-xx-xx-xx
-#      - alexaSmartHome: amzn1.ask.skill.xx-xx-xx-xx
-#      - iot:
-#          sql: "SELECT * FROM 'some_topic'"
-#      - cloudwatchEvent:
-#          event:
-#            source:
-#              - "aws.ec2"
-#            detail-type:
-#              - "EC2 Instance State-change Notification"
-#            detail:
-#              state:
-#                - pending
-#      - cloudwatchLog: '/aws/lambda/hello'
-#      - cognitoUserPool:
-#          pool: MyUserPool
-#          trigger: PreSignUp
+    environment:
+      BASIQ_API_URL: https://au-api.basiq.io
+      BASIQ_USER_TOKEN: OTgxYjNiZDYtZTk1ZC00YThiLThjZWItZWFiNTI4NzMxZjg3OjNmMmQ5ZDgxLTVhZmItNDM3ZC05ODJkLTQxMGMzMzQwZmU0Nw==
+      COUNTRY: AU    
 
-#    Define function environment variables here
-#    environment:
-#      variable2: value2
-
-# you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"

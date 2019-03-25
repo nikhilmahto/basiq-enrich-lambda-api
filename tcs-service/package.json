@@ -17,6 +17,8 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
-    "nock": "^10.0.4"
+    "nock": "^10.0.4",
+    "serverless-iam-roles-per-function": "^1.0.4",
+    "serverless-plugin-include-dependencies": "^3.2.1"
   }
 }
