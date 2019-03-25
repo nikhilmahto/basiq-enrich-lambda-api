@@ -14,71 +14,70 @@ exports.getTCS = async (event) => {
      let jsonEventBody=JSON.parse(event.body);
      if((jsonEventBody.transaction_narration!= null && jsonEventBody.transaction_narration!= undefined && jsonEventBody.transaction_narration!= "")
      && (jsonEventBody.institution!= null && jsonEventBody.institution!= undefined && jsonEventBody.institution!= ""))
-     {
-        console.log("Event_Headers: " + event.headers);   
-        let result = await index.callBasiq(jsonEventBody.transaction_narration,jsonEventBody.institution,event.headers['x-correlationid']);
-    
-
+     {  
+        let result = await index.callBasiq(jsonEventBody.transaction_narration,jsonEventBody.institution);
    if(/[2]\d\d/.test(result.statusCode))
    {
-       const response = {
-        "statusCode": result.statusCode,
-        "headers": result.headers,
-        "body": JSON.stringify({
-            "message": result.body,
-            "x-correlationid": result.request.headers['x-correlationid']
-        })    
+       var response = {
+        'statusCode': result.statusCode,
+        'headers': {'Content-Type': 'application/json',
+                    'x-correlationid': event.headers['x-correlationid']},
+        'body': JSON.stringify({
+            "message": result.body
+        }),
+        'isBase64Encoded': false
     };
-    return response;
+   return response;
    }
-   else
-   {
-    if(/[4]\d\d/.test(result.statusCode))
-    {
-        const response = {
-        "statusCode": result[0].statusCode,
-        "headers": result[0].options.headers,
-        "body": JSON.stringify({
-            "message": result[0].error,
-            "x-correlationid": result[0].options.headers['x-correlationid']
-        })  
+   else if(/[4]\d\d/.test(result[0].statusCode)){
+    var response = {
+        'statusCode': result[0].statusCode,
+        'headers': {'Content-Type': 'application/json',
+                    'x-correlationid': event.headers['x-correlationid']},
+        'body': JSON.stringify({
+            "message": "Bad request - " + result[0].error.data[0].detail          
+        }),
+        'isBase64Encoded': false
     };
-    return response;
+   return response;
    }
-   else if(/[5]\d\d/.test(result.statusCode)){
-    const response = {
-        "statusCode": result[0].statusCode,
-        "headers": result[0].options.headers,
-        "body": JSON.stringify({
-            "message": result[0].error,
-            "attempts": result[1],
-            "x-correlationid": result[0].options.headers['x-correlationid']
-        })
+   else {
+    var response = {
+        'statusCode': result[0].statusCode,
+        'headers': {'Content-Type': 'application/json',
+                    'x-correlationid': event.headers['x-correlationid']},
+        'body': JSON.stringify({ 
+           "message": result[0].error,
+           "attempts": result[1]
+        }),
+        'isBase64Encoded': false
     };
-    return response;
+return response;
    }
-   
   } 
-    }
     else{
-         const response = {
-        "statusCode": 400,
-       "headers": event.headers,
+        var response = {
+        "statusCode":  400,
+       "headers": {'Content-Type': 'application/json',
+                   'x-correlationid': event.headers['x-correlationid']},
         "body": JSON.stringify({
-           "message": "Bad Request - Please enter the 'transaction_narration' and 'institution'."
-        })   // body must be returned as a string
+           "message": "Bad request - Required query parameters 'transaction_narration' and 'institution'."
+        }),
+        'isBase64Encoded': false
     };
     return response;
     }
 }
   else
    {
-        const response = {
+    var response = {
        "statusCode": 400,
-       "headers": event.headers,
+       "headers": {'Content-Type': 'application/json',
+                   'x-correlationid': event.headers['x-correlationid']},
         "body": JSON.stringify({
-           "message": "Bad Request - Please enter the 'transaction_narration' and 'institution'."
-        })   // body must be returned as a string
+           "message": "Bad request - Required query parameters 'transaction_narration' and 'institution'."
+        }),
+        'isBase64Encoded': false
     };
     return response;
    }
@@ -86,10 +85,13 @@ exports.getTCS = async (event) => {
 else
 {
     
-    const response = {
-        "statusCode": 400,
-        "headers": event.headers,
-         "body": "Bad Request - Please enter the mandatory headers x-correlationid,x-nab-e2eTraceId,x-nab-clientApplication,x-nab-consumer and x-nab-requestDateTime."
+    var response = {
+        "statusCode":  400,
+        "headers": {'Content-Type': 'application/json'},
+        "body": JSON.stringify({
+            "message": "Bad request - Required headers x-correlationid,x-nab-e2eTraceId,x-nab-clientApplication,x-nab-consumer and x-nab-requestDateTime."
+         }),
+         'isBase64Encoded': false
      };
      return response;
 }
