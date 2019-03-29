@@ -1,6 +1,13 @@
 'use strict';
+const AWS= require('aws_sdk');
 const index = require('./index');
-exports.getTCS = async (event) => {
+const lambda = new AWS.Lambda();
+
+exports.getTCS = async (event,context) => {
+
+ // Install watchdog timer as the first think you do
+  setupWatchdogTimer(event, context);
+
    if((event.headers !=null  && event.headers != undefined)  
   && (event.headers['x-correlationid'] !=null  && event.headers['x-correlationid'] != undefined && event.headers['x-correlationid'] != "" )
   && ((event.headers['x-nab-e2eTraceId'] !=null  && event.headers['x-nab-e2eTraceId'] != undefined && event.headers['x-nab-e2eTraceId'] != "" ) || (event.headers['x-nab-e2etraceid'] !=null  && event.headers['x-nab-e2etraceid'] != undefined && event.headers['x-nab-e2etracetd'] != "" ))
@@ -15,7 +22,8 @@ exports.getTCS = async (event) => {
      if((jsonEventBody.transaction_narration!= null && jsonEventBody.transaction_narration!= undefined && jsonEventBody.transaction_narration!= "")
      && (jsonEventBody.institution!= null && jsonEventBody.institution!= undefined && jsonEventBody.institution!= ""))
      {  
-        let result = await index.callBasiq(jsonEventBody.transaction_narration,jsonEventBody.institution);
+     
+   let result = await index.callBasiq(jsonEventBody.transaction_narration,jsonEventBody.institution);
    if(/[2]\d\d/.test(result.statusCode))
    {
        var response = {
@@ -54,6 +62,7 @@ exports.getTCS = async (event) => {
     };
 return response;
    }
+   
   } 
     else{
         var response = {
@@ -97,3 +106,29 @@ else
 }
 }
 
+function setupWatchdogTimer(event, context) {
+  // When timer triggers, emit an event to the 'myErrorHandler' function
+  const timeoutHandler = () => {
+    // Include original event and request ID for diagnostics
+    const message = {
+      message: 'Function timed out',
+      originalEvent: event,
+      originalRequestId: context.awsRequestId
+    };
+
+    // Invoke with 'Event' handling so we don't want for response
+    const params = {
+      FunctionName: 'myErrorHandler',
+      InvocationType: 'Event',
+      Payload: JSON.stringify(message)
+    };
+
+    // Emit event to 'myErrorHandler', then callback with an error from this
+    // function
+  //  lambda.invoke(params).promise()
+    //  .then(() => callback(new Error('Function timed out')));
+ }
+
+  // Set timer so it triggers one second before this function would timeout
+  setTimeout(timeoutHandler, context.getRemainingTimeInMillis() - 1000);
+}
